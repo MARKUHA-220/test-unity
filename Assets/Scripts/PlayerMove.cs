@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -20,6 +18,7 @@ public class PlayerMove : MonoBehaviour
     {
         myCC = GetComponent<CharacterController>();
     }
+
     void Update()
     {
         CheckGround();
@@ -27,19 +26,23 @@ public class PlayerMove : MonoBehaviour
         ApplyGravity();
         Jump();
         MovePlayer();
-        //ChechForHeadBob();
 
-        camAnim.SetBool("isWalking", isWalking);
+        if (camAnim != null)
+        {
+            camAnim.SetBool("isWalking", isWalking);
+        }
     }
+
     void CheckGround()
     {
         isGrounded = myCC.isGrounded;
 
-        if (isGrounded && yVelocity < 0)
+        if (isGrounded && yVelocity < 0f)
         {
             yVelocity = -2f;
         }
     }
+
     void GetInput()
     {
         if (Input.GetKey(KeyCode.W) ||
@@ -50,17 +53,15 @@ public class PlayerMove : MonoBehaviour
             inputVector = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
             inputVector.Normalize();
             inputVector = transform.TransformDirection(inputVector);
-
             isWalking = true;
         }
         else
         {
             inputVector = Vector3.Lerp(inputVector, Vector3.zero, momentumDamping * Time.deltaTime);
-
             isWalking = false;
         }
-        movementVector = (inputVector * playerSpeed) + (Vector3.up * myGravity);
     }
+
     void ApplyGravity()
     {
         yVelocity += myGravity * Time.deltaTime;
@@ -73,23 +74,11 @@ public class PlayerMove : MonoBehaviour
             yVelocity = jumpForce;
         }
     }
+
     void MovePlayer()
     {
         movementVector = inputVector * playerSpeed;
         movementVector.y = yVelocity;
-
         myCC.Move(movementVector * Time.deltaTime);
     }
-
-    //void ChechForHeadBob()
-    //{
-    //    if (myCC.velocity.magnitude > 0.1f)
-    //    {
-    //        isWalking = true;
-    //    }
-    //    else
-    //    {
-    //        isWalking = false;
-    //    }
-    //}
 }
