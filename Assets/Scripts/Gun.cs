@@ -1,44 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
 public class Gun : MonoBehaviour
 {
-    [SerializeField] private float range = 20f;
-    [SerializeField] private float verticalRange = 20f;
-    [SerializeField] private EnemyManeger enemyManeger;
+    public float range = 20f;
+    public float verticalRange = 20f;
 
     private BoxCollider gunTrigger;
+    public EnemyManeger enemyManeger;
 
-    private void Start()
+    void Start()
     {
         gunTrigger = GetComponent<BoxCollider>();
-        gunTrigger.isTrigger = true;
-        gunTrigger.size = new Vector3(1f, verticalRange, range);
-        gunTrigger.center = new Vector3(0f, 0f, range * 0.5f);
-
-        if (enemyManeger == null)
-        {
-            enemyManeger = FindObjectOfType<EnemyManeger>();
-        }
+        gunTrigger.size = new Vector3(1, verticalRange, range);
+        gunTrigger.center = new Vector3(0, 0, range * 0.5f);
     }
-
+    void Update()
+    {
+        
+    }
     private void OnTriggerEnter(Collider other)
     {
-        Enemy enemy = other.GetComponent<Enemy>();
+        Enemy enemy = other.transform.GetComponent<Enemy>();
 
-        if (enemy != null && enemyManeger != null)
+        if(enemy)
         {
-            enemyManeger.AddEnemy(enemy);
+            //add here
         }
     }
-
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        Enemy enemy = other.GetComponent<Enemy>();
+        Enemy enemy = other.transform.GetComponent<Enemy>();
 
-        if (enemy != null && enemyManeger != null)
+        if (enemy)
         {
-            enemyManeger.RemoveEnemy(enemy);
+            //remove here
         }
     }
 }
